@@ -228,34 +228,66 @@ export default function ContactConverter() {
   // Descarregar el CSV
   const downloadCSV = useCallback(() => {
     if (contacts.length === 0) return;
-    
-    // Unificar totes les claus
-    const allKeys = new Set<string>();
-    contacts.forEach(contact => {
-      Object.keys(contact).forEach(key => allKeys.add(key));
+
+    // Definir l'ordre i els camps segons l'exemple
+    const fields = [
+      'name',
+      'is_company',
+      'company_name',
+      'country_id',
+      'state_id',
+      'zip',
+      'city',
+      'street',
+      'street2',
+      'phone',
+      'mobile',
+      'email',
+      'vat',
+      'bank_ids/bank',
+      'bank_ids/acc_number',
+      // Completar amb columnes buides per igualar l'exemple
+      ...Array(12).fill('')
+    ];
+
+    // Map vCard a format Odoo
+    const data = contacts.map(contact => {
+      return {
+        name: contact.fullName || contact.firstName + ' ' + contact.lastName || '',
+        is_company: '', // L'usuari haurà d'omplir-ho manualment
+        company_name: '', // L'usuari haurà d'omplir-ho manualment
+        country_id: '',
+        state_id: '',
+        zip: '',
+        city: '',
+        street: contact.homeStreet || contact.workStreet || '',
+        street2: '',
+        phone: contact.workPhone || contact.homePhone || '',
+        mobile: contact.mobilePhone || '',
+        email: contact.workEmail || contact.homeEmail || contact.email1 || '',
+        vat: '',
+        'bank_ids/bank': '',
+        'bank_ids/acc_number': '',
+        // Les columnes buides es gestionen a l'exportació
+      };
     });
-    
-    // Convertir a CSV
+
+    // Generar CSV amb punt i coma
     const csv = Papa.unparse({
-      fields: Array.from(allKeys),
-      data: contacts.map(contact => {
-        const row: Record<string, string> = {};
-        Array.from(allKeys).forEach(key => {
-          row[key] = contact[key] || '';
-        });
-        return row;
-      })
+      fields,
+      data: data.map(row => fields.map(f => row[f] || '')),
+      delimiter: ';'
     });
-    
+
     // Crear el blob i descarregar
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
-    
+
     link.setAttribute('href', url);
     link.setAttribute('download', 'contactes.csv');
     link.style.visibility = 'hidden';
-    
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

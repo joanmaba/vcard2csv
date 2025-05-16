@@ -1,0 +1,4 @@
+name;is_company;company_name;country_id;state_id;zip;city;street;street2;phone;mobile;email;vat;bank_ids/bank;bank_ids/acc_number;;;;;;;;;;;;
+Deco Addict;1;;US;California;94523;Pleasant Hill;77 Santa Barbara Rd;;+3210588558;;azure@example.com;BE0477472701;GEBABEBB;12554641;;;;;;;;;;;;
+Azure Interior;1;;US;California;94538;Fremont;4557 De Silva St;;;+582126810538;vauxoo@yourcompany.example.com;;;;;;;;;;;;;;;
+Brandon Freeman;0;Azure Interior;US;California;94538;Fremont;4557 De Silva St;;;355-687-3262;brandon.freeman55@example.com;;BEBABEBB;321654987;;;;;;;;;;;;
